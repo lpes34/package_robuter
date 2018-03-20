@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="fanuc_post_processor_application" pkg="fanuc_post_processor_application" type="fanuc_post_processor_application" output="screen" required="true" />
+</launch>

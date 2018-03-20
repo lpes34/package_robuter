@@ -1,0 +1,4 @@
+ - builder: doxygen
+   name: fanuc_post_processor_library C++ API
+   output_dir: fanuc_post_processor_library_c++
+   file_patterns: '*.c *.cpp *.h *.hpp'

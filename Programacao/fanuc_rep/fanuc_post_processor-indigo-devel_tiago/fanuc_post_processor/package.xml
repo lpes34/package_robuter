@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>fanuc_post_processor</name>
+  <version>0.0.1</version>
+  <description>Fanuc post-processor</description>
+  <author>Victor Lamoine - Institut Maupertuis</author>
+  <maintainer email="victor.lamoine@institutmaupertuis.fr">Victor Lamoine</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

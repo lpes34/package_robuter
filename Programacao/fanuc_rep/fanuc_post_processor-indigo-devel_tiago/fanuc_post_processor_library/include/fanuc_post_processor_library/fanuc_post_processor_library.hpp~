@@ -1,0 +1,228 @@
+#ifndef FANUC_POST_PROCESSOR_LIBRARY_HPP
+#define FANUC_POST_PROCESSOR_LIBRARY_HPP
+
+#include <string>
+#include <limits>
+#include <fstream>
+
+// Curlite library
+#include "fanuc_post_processor_library/curlite.hpp"
+
+// Eigen headers
+#include <Eigen/Dense>
+
+// ROS headers
+#include <ros/ros.h>
+#include <eigen_conversions/eigen_msg.h>
+
+// Boost headers
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
+
+/**
+ * @file fanuc_post_processor_library.hpp
+ * @brief Fanuc post-processor.
+ * @author Victor Lamoine - Institut Maupertuis
+ * @date Project started in March 2016
+ */
+
+/** @mainpage Fanuc post-processor library
+ * Please read [InstitutMaupertuis/fanuc_post_processor](https://github.com/InstitutMaupertuis/fanuc_post_processor#description)
+ */
+
+/** @brief FanucPostProcessor class */
+class FanucPostProcessor
+{
+public:
+  enum MovementType
+  {
+    JOINT, LINEAR
+  };
+
+  enum SpeedType
+  {
+    MM_SEC, CM_SEC, M_SEC, MM_MIN, CM_MIN, M_MIN, PERCENTAGE
+  };
+
+  enum Permissions
+  {
+    READ_WRITE, READ
+  };
+
+private:
+  std::string
+  movementTypeToString(MovementType type)
+  {
+    if (type == JOINT)
+      return "J";
+    else if (type == LINEAR)
+      return "L";
+    else
+      return "";
+  }
+
+  std::string
+  speedTypeToString(SpeedType type)
+  {
+    if (type == MM_SEC)
+      return "mm/sec";
+    else if (type == CM_SEC)
+      return "cm/sec";
+    else if (type == M_SEC)
+      return "m/sec";
+    else if (type == MM_MIN)
+      return "mm/min";
+    else if (type == CM_MIN)
+      return "cm/min";
+    else if (type == M_MIN)
+      return "m/min";
+    else if (type == PERCENTAGE)
+      return "%";
+    else
+      return "";
+  }
+
+  std::string
+  permissionsToString(Permissions perm)
+  {
+    if (perm == READ_WRITE)
+      return "READ_WRITE";
+    if (perm == READ)
+      return "READ";
+    else
+      return "";
+  }
+
+public:
+  /** @brief Default Constructor */
+  FanucPostProcessor();
+
+  ~FanucPostProcessor();
+
+  bool generateProgram(std::string &output_program);
+
+  void clearProgram();
+
+  void useLineNumbers (bool line_numbers);
+
+  /**
+   * Allows to add an extra group with 0.000 values everywhere
+   */
+  void addExtra2AxisGroup();
+
+  bool
+  uploadToFtp(const std::string ip_address, const std::string port_number = "4900",
+              const std::string username = "master", const std::string password = "123");
+
+  bool setProgramName(const std::string name);
+
+  bool setProgramComment(const std::string comment);
+
+  bool setMemorySize(const unsigned size);
+
+  bool setPermissions(const FanucPostProcessor::Permissions perms);
+
+  bool setDefaultgroup(const std::string default_group);
+
+  bool setApplicative(const std::string appl);
+
+  bool
+  appendPoseFine(const FanucPostProcessor::MovementType move_type, const Eigen::Isometry3d &pose,
+                 const unsigned pose_id, const unsigned speed, const FanucPostProcessor::SpeedType speed_type,
+                 const std::string option = "");
+
+  bool
+  appendPoseFine(const FanucPostProcessor::MovementType move_type, const unsigned pose_id, const unsigned speed,
+                 const FanucPostProcessor::SpeedType speed_type, const std::string option = "");
+
+  bool
+  appendPoseCNT(const FanucPostProcessor::MovementType move_type, const Eigen::Isometry3d &pose, const unsigned pose_id,
+                const unsigned speed, const FanucPostProcessor::SpeedType speed_type, const unsigned cnt,
+                const std::string option = "");
+
+  bool
+  appendPoseCNT(const FanucPostProcessor::MovementType move_type, const unsigned pose_id, const unsigned speed,
+                const FanucPostProcessor::SpeedType speed_type, const unsigned cnt, const std::string option = "");
+
+  void
+  appendComment(const std::string comment);
+
+  void
+  appendEmptyLine();
+
+  void
+  appendDigitalOutput(const unsigned digital_out_id, const bool state);
+
+  // FIXME: Pulse time unit? Add enum with the different possibilities!
+  bool
+  appendDigitalOutput(const unsigned digital_out_id, const double pulse_time);
+
+  // FIXME: time unit? Add enum with the different possibilities!
+  bool
+  appendWait(const double time);
+
+  void
+  appendWait(const unsigned digital_in_id, bool state);
+
+  void
+  appendUFrame(const unsigned uf_id);
+
+  void
+  appendUTool(const unsigned ut_id);
+
+  void
+  appendGroupOutput(const unsigned id, const unsigned value);
+
+  void
+  appendSetRegister(const unsigned r_id, const double value);
+
+  bool
+  appendRun(const std::string program_name);
+
+  bool
+  appendLabel(const unsigned id);
+
+  bool
+  appendJumpLabel(const unsigned id);
+
+  void
+  appendDataMonitorStart(const unsigned id);
+
+  void
+  appendDataMonitorStop();
+
+private:
+  bool
+  generateHeader();
+
+  std::string
+  generateLineNumber();
+
+  std::string program_name_;
+
+  std::string program_comment_;
+
+  FanucPostProcessor::Permissions permissions_;
+
+  std::string default_group_;
+
+  std::string applicative_;
+
+  std::vector<std::string> lines_;
+
+  std::vector<unsigned> labels_id_;
+
+  unsigned user_frame_;
+
+  unsigned user_tool_;
+
+  bool line_numbers_;
+
+  std::map<unsigned, Eigen::Isometry3d, std::less<unsigned>,
+           Eigen::aligned_allocator<std::pair<const unsigned, Eigen::Isometry3d> > > poses_;
+
+public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
+
+#endif
