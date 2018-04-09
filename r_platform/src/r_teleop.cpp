@@ -30,7 +30,7 @@
 //=======================================================================================
 
 
-bool robot_allowed=true, robot_allowed=true;
+bool robot_allowed=true;
 
 class TeleopRobonuc
 {
