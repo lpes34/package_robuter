@@ -5,7 +5,7 @@ mode: "-e"
 
 msg_freq: 20
 wheel_radius: 0.12
-base_length: 0.6
+base_length: 0.5406
 pulses_1turn: 8024
 lin_const: 0.06
 ang_const: 0.08

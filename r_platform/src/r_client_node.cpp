@@ -45,7 +45,7 @@ public:
 void Listener::callback(const std_msgs::String::ConstPtr& msg) {
     memset(topic_message, 0, 256);
     strcpy(topic_message, msg->data.c_str());
-    ROS_INFO("I heard:[%s]", msg->data.c_str());
+    //ROS_INFO("I heard:[%s]", msg->data.c_str());
 }
 
 char* Listener::getMessageValue() {
@@ -139,6 +139,7 @@ int main(int argc, char *argv[]) {
 	
 		// conversion of array buffer to string
 		str_buffer = (std::string)buffer;
+		
 
 		if(str_buffer.find("RQT") != std::string::npos!=NULL) // find for RQT inside string
 		{

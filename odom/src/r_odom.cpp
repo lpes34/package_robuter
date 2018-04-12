@@ -19,7 +19,7 @@ public:
   {
     double x = 0;
     double y = 0;
-    double th = M_PI;
+    double th = 0;
   };
 
   OdometryPublisher(std::string pid_topic, std::string odom_topic, Params params);
@@ -118,7 +118,7 @@ void OdometryPublisher::pidCallback(const comm_tcp::pid::ConstPtr& msg)
   geometry_msgs::TransformStamped odom_trans;
   odom_trans.header.stamp = current_time;
   odom_trans.header.frame_id = "odom_wheel";
-  odom_trans.child_frame_id = "base_link";
+  odom_trans.child_frame_id = "test";
 
   odom_trans.transform.translation.x = _position.x;
   odom_trans.transform.translation.y = _position.y;
@@ -140,7 +140,7 @@ void OdometryPublisher::pidCallback(const comm_tcp::pid::ConstPtr& msg)
   odom.pose.pose.orientation = odom_quat;
 
   // set the velocity
-  odom.child_frame_id = "base_link";
+  odom.child_frame_id = "test";
   odom.twist.twist.linear.x = vx;
   odom.twist.twist.linear.y = vy;
   odom.twist.twist.angular.z = vth;

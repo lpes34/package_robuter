@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+
+<robot
+	xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- include the laser xacro -->
+
+    <xacro:macro name ="r_platform" params="prefix">
+    	<link name ="${prefix}base_link">
+    		<visual>
+    			<origin rpy="0 0 0" xyz="0 0 0" />
+    			<geometry>
+    				<mesh filename ="package://r_platform/CAD/robot-1.stl" />
+    			</geometry>
+    			<material name ="LightGrey">
+        			<color rgba="0.83 0.83 0.83 1.0"/>
+        		</material>
+
+    		</visual>
+
+    	</link>
+
+    	 <link name ="${prefix}back_link">
+    		<visual>
+    			<origin rpy="${pi/2} 0 0" xyz="0 0 0.161" />
+    			<geometry>
+    				<mesh filename ="package://r_platform/CAD/CenaNova-1.stl" />
+    			</geometry>
+    			<material name ="LightGrey">
+        			<color rgba="0.83 0.83 0.83 1.0"/>
+        		</material>
+    		</visual>
+    	</link>
+
+    	<link name ="${prefix}front_link">
+    		<visual>
+    			<origin rpy="0 0 0" xyz="0 0 0" />
+    			<geometry>
+    				<mesh filename ="package://r_platform/CAD/CenaNovaLaser-1.stl" />
+    			</geometry>
+    			<material name ="LightGrey">
+        			<color rgba="0.83 0.83 0.83 1.0"/>
+        		</material>
+    		</visual>
+
+    	</link>
+
+    	<joint name="${prefix}base_link-${prefix}back_link" type="fixed">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <parent link="${prefix}base_link" />
+            <child link="${prefix}back_link" />
+		</joint>
+
+
+		<joint name="${prefix}base_link-${prefix}front_link" type="fixed">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <parent link="${prefix}base_link" />
+            <child link="${prefix}front_link" />
+		</joint>
+
+
+
+
+    </xacro:macro>
+</robot>
